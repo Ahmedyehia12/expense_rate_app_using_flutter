@@ -3,9 +3,10 @@ import 'screens/expenses.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
+    MaterialApp(
+      theme: ThemeData(useMaterial3: true),
       debugShowCheckedModeBanner: false,
-      home: Expenses(),
+      home: const Expenses(),
     ),
   );
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_rate_app/models/expense.dart';
 import 'package:expense_rate_app/widgets/expenses_list.dart';
+import 'package:expense_rate_app/widgets/new_expense.dart';
 
 class Expenses extends StatefulWidget {
   const Expenses({super.key});
@@ -11,6 +12,7 @@ class Expenses extends StatefulWidget {
 
 class _ExpensesState extends State<Expenses> {
   final List<Expense> _registeredExpenses = [
+    // dummy data
     Expense(
         title: 'Flutter course',
         amount: 19.9,
@@ -22,6 +24,14 @@ class _ExpensesState extends State<Expenses> {
         date: DateTime.now(),
         category: Category.leisure),
   ];
+  void _openAddExpenseOverLay() {
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return const NewExpense();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +40,15 @@ class _ExpensesState extends State<Expenses> {
         Expanded(child: ExpensesList(registeredExpenses: _registeredExpenses)),
       ]),
       appBar: AppBar(
-        backgroundColor: Colors.purple,
+        title: const Text('Flutter Expense Tracker'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: _openAddExpenseOverLay,
+            icon: const Icon(Icons.add),
+          ),
+        ],
+        // backgroundColor: Colors.purple,
       ),
     );
   }
