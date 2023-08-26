@@ -11,6 +11,16 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
+  void addExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.add(Expense(
+          title: expense.title,
+          amount: expense.amount,
+          date: expense.date,
+          category: expense.category));
+    });
+  }
+
   final List<Expense> _registeredExpenses = [
     // dummy data
     Expense(
@@ -28,7 +38,7 @@ class _ExpensesState extends State<Expenses> {
     showModalBottomSheet(
         context: context,
         builder: (ctx) {
-          return const NewExpense();
+          return NewExpense(addNewExpense: addExpense);
         });
   }
 

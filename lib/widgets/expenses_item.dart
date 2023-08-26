@@ -14,10 +14,11 @@ class ExpenseItem extends StatelessWidget {
       ),
       child: Card(
           child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(expenseItem.title),
           const SizedBox(
-            height: 4,
+            height: 25,
           ),
           Row(
             children: [
