@@ -3,9 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
 final formatter = DateFormat.yMd(); // formatter object (Y/M/D)
-
 const uuid = Uuid(); // Create a Uuid instance
-
 enum Category {
   // the only possible categories
   food,
@@ -13,7 +11,6 @@ enum Category {
   leisure,
   work
 }
-
 const categoryIcons = {
   Category.food: Icons.lunch_dining,
   Category.travel: Icons.flight_takeoff,
@@ -40,7 +37,6 @@ class Expense {
     return formatter.format(date);
   }
 }
-
 class ExpenseBucket {
   const ExpenseBucket({required this.category, required this.expenses});
   final Category category;

@@ -33,6 +33,7 @@ class _ExpensesState extends State<Expenses> {
   ];
   void _openAddExpenseOverLay() {
     showModalBottomSheet(
+        useSafeArea: true,
         isScrollControlled: true,
         context: context,
         builder: (ctx) {
@@ -64,6 +65,9 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    // excutes again if we rotated the Emulator
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     Widget mainContent = const Center(
       child: Text('No expenses found , start adding some!'),
     );
@@ -74,10 +78,15 @@ class _ExpensesState extends State<Expenses> {
       );
     }
     return Scaffold(
-      body: Column(children: [
-        Chart(expenses: _registeredExpenses),
-        Expanded(child: mainContent),
-      ]),
+      body: width < 600
+          ? Column(children: [
+              Chart(expenses: _registeredExpenses),
+              Expanded(child: mainContent),
+            ])
+          : Row(children: [
+              Expanded(child: Chart(expenses: _registeredExpenses)),
+              Expanded(child: mainContent),
+            ]),
       appBar: AppBar(
         title: const Text('Flutter Expense Tracker'),
         centerTitle: true,
