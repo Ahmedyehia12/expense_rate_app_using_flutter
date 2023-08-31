@@ -73,93 +73,197 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
-      child: Column(
-        children: [
-          TextField(
-            controller: _titleController,
-            maxLength: 50,
-            keyboardType: TextInputType.text,
-            decoration: const InputDecoration(
-              label: Text('Title'),
-            ),
-          ),
-          Row(// row dosen't put limitations on width
+    final keyboardSpace = MediaQuery.of(context)
+        .viewInsets
+        .bottom; //(overlapping from the bottom)
+
+    return LayoutBuilder(builder: (ctx, constrains) {
+      final width = constrains.maxWidth;
+      return SizedBox(
+        height: double.infinity,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, 48, 16, keyboardSpace + 16),
+            child: Column(
               children: [
-            Expanded(
-              child: TextField(
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  label: Text('Amount'),
-                  prefixText: '\$',
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(_selectedDate == null
-                      ? 'No date selected'
-                      : formatter.format(_selectedDate!)),
-                  // ! tells dart that this will never be null
-                  IconButton(
-                    icon: const Icon(Icons.calendar_month),
-                    onPressed: _presentDatePicker,
+                if (width >= 600)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _titleController,
+                          maxLength: 50,
+                          keyboardType: TextInputType.text,
+                          decoration: const InputDecoration(
+                            label: Text('Title'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: _amountController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            label: Text('Amount'),
+                            prefixText: '\$',
+                          ),
+                        ),
+                      ),
+                    ],
                   )
-                ],
-              ),
-            )
-          ]),
-          const SizedBox(
-            height: 20.0,
+                else
+                  TextField(
+                    controller: _titleController,
+                    maxLength: 50,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
+                      label: Text('Title'),
+                    ),
+                  ),
+                if (width >= 600)
+                  Row(
+                    children: [
+                      DropdownButton(
+                          value: _selectedCategory,
+                          items: Category.values
+                              .map((category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(category.name.toUpperCase())))
+                              .toList(),
+                          onChanged: (value) {
+                            if (value == null) {
+                              return;
+                            }
+                            setState(() {
+                              _selectedCategory = value;
+                            });
+                          }),
+                      const SizedBox(
+                        width: 12.0,
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(_selectedDate == null
+                                ? 'No date selected'
+                                : formatter.format(_selectedDate!)),
+                            // ! tells dart that this will never be null
+                            IconButton(
+                              icon: const Icon(Icons.calendar_month),
+                              onPressed: _presentDatePicker,
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+                else
+                  Row(// row dosen't put limitations on width
+                      children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _amountController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          label: Text('Amount'),
+                          prefixText: '\$',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(_selectedDate == null
+                              ? 'No date selected'
+                              : formatter.format(_selectedDate!)),
+                          // ! tells dart that this will never be null
+                          IconButton(
+                            icon: const Icon(Icons.calendar_month),
+                            onPressed: _presentDatePicker,
+                          )
+                        ],
+                      ),
+                    )
+                  ]),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                const SizedBox(
+                  height: 16.0,
+                ),
+                if (width >= 600)
+                  Row(
+                    children: [
+                      const Spacer(),
+                      ElevatedButton(
+                          onPressed: _submitExpenseData,
+                          child: const Text('Save Expense')),
+                      const SizedBox(
+                        width: 10.0,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            // removes the modal buttom sheet from the screen
+                          },
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(color: Colors.red),
+                          ))
+                    ],
+                  )
+                else
+                  Row(
+                    children: [
+                      DropdownButton(
+                          value: _selectedCategory,
+                          items: Category.values
+                              .map((category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(category.name.toUpperCase())))
+                              .toList(),
+                          onChanged: (value) {
+                            if (value == null) {
+                              return;
+                            }
+                            setState(() {
+                              _selectedCategory = value;
+                            });
+                          }),
+                      const Spacer(),
+                      ElevatedButton(
+                          onPressed: _submitExpenseData,
+                          child: const Text('Save Expense')),
+                      const SizedBox(
+                        width: 10.0,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            // removes the modal buttom sheet from the screen
+                          },
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(color: Colors.red),
+                          )),
+                    ],
+                  )
+              ],
+            ),
           ),
-          const SizedBox(
-            height: 16.0,
-          ),
-          Row(
-            children: [
-              DropdownButton(
-                  value: _selectedCategory,
-                  items: Category.values
-                      .map((category) => DropdownMenuItem(
-                          value: category,
-                          child: Text(category.name.toUpperCase())))
-                      .toList(),
-                  onChanged: (value) {
-                    if (value == null) {
-                      return;
-                    }
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                  }),
-              const Spacer(),
-              ElevatedButton(
-                  onPressed: _submitExpenseData,
-                  child: const Text('Save Expense')),
-              const SizedBox(
-                width: 10.0,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    // removes the modal buttom sheet from the screen
-                  },
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.red),
-                  )),
-            ],
-          )
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }
